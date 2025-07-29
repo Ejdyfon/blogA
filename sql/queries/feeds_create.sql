@@ -9,3 +9,6 @@ VALUES (
     $6
 )
 RETURNING *;
+
+-- name: ListFeeds :many
+select * from feeds;
