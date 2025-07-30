@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerFollow(s *state, cmd command) error {
+func handlerFollow(s *state, cmd command, user database.User) error {
 	if len(cmd.Args) != 1 {
 		return fmt.Errorf("usage: %s <url>", cmd.Name)
 	}
@@ -20,16 +20,11 @@ func handlerFollow(s *state, cmd command) error {
 		return fmt.Errorf("Feed doesnt exist: %w", url)
 	}
 
-	usr, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
-	if usr.ID == uuid.Nil {
-		return fmt.Errorf("User doesnt exist: %w", s.cfg.CurrentUserName)
-	}
-
 	param := database.CreateFeedFollowParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
-		UserID:    usr.ID,
+		UserID:    user.ID,
 		FeedID:    feed.ID,
 	}
 
